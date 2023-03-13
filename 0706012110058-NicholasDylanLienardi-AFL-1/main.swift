@@ -7,8 +7,27 @@
 
 import Foundation
 
-let user = Player()
-var enemy = Enemy(maxHealth: 3000, strength: 50, name: "Dylan")
+
+//stats player
+var mxHP = 100
+var maxHealth = 100
+var mxMP = 50
+var maxMana = 50
+var pots = 10
+var elixirs = 10
+var shield = false
+var nameP = ""
+var lvl = 1
+var strength = 10
+var hasGun = false
+var defense = 0
+var hasArmor = false
+
+//stats musuh
+var health = 300
+var maxHealthEnemy = 300
+var strengthEnemy = 10
+var nameEnemy = "test"
 
 startGame()
 
@@ -31,14 +50,14 @@ func startGame(){
 func welcomeScreen(){
     while true {
         print("May I ask your name young martial artist?")
-        let name = readLine() ?? ""
+        let gg = readLine() ?? ""
         let nameRegex = "^[a-zA-Z]+$"
         let namePredicate = NSPredicate(format:"SELF MATCHES %@", nameRegex)
         
-        if namePredicate.evaluate(with: name) {
+        if namePredicate.evaluate(with: gg) {
             // Valid input, name only contains characters a-z and A-Z
-            print("\nNice to meet you, \(name)!")
-            user.name = name
+            print("\nNice to meet you, \(gg)!")
+            nameP = gg
             journeyScreen()
             break // Exit the loop
         }
@@ -67,16 +86,22 @@ func journeyScreen(){
         }else if(input == "d"){
             drinkElixir()
         }else if(input == "f"){
-            enemy = Enemy(maxHealth: 300, strength: 10, name: "Troll")
+            health = 300
+            strengthEnemy = 10
+            nameEnemy = "Troll"
             battle()
         }else if(input == "m"){
-            enemy = Enemy(maxHealth: 600, strength: 20, name: "Golem")
+            health = 600
+            strengthEnemy = 20
+            nameEnemy = "Golem"
             battle()
         }else if(input == "e"){
-            enemy = Enemy(maxHealth: 1000, strength: 40, name: "The Pedophile")
+            health = 1000
+            strengthEnemy = 40
+            nameEnemy = "BIG BOSS"
             battle()
         }else if(input == "q"){
-            print("\nThat will be the end of our adeventure today! Fare thee well young martial artist!   \n\n")
+            print("\nThat will be the end of our adventure today! Fare thee well young martial artist!   \n\n")
             break
         }
     }
@@ -84,14 +109,14 @@ func journeyScreen(){
 
 func showStats(){
     print("\n===========================================")
-    print("Player Name  : \(user.name)")
-    print("Player Level : \(user.lvl)")
-    print("\nPlayer Health: \(user.maxHealth)/\(user.mxHP)")
-    print("Player Mana  : \(user.maxMana)/\(user.mxMP)")
-    print("Strength     : \(user.strength)")
-    print("Defense      : \(user.defense)")
+    print("Player Name  : \(nameP)")
+    print("Player Level : \(lvl)")
+    print("\nPlayer Health: \(maxHealth)/\(mxHP)")
+    print("Player Mana  : \(maxMana)/\(mxMP)")
+    print("Strength     : \(strength)")
+    print("Defense      : \(defense)")
     print("\nMagic:")
-    if(user.hasGun){
+    if(hasGun){
         print("- Shoot. No Mana Required. Deal light damage.")
         print("- Headshot!. 10 Mana Required. Deal heavy damage.")
     }else{
@@ -100,8 +125,8 @@ func showStats(){
     }
     print("- Black Turtle Formation. 10 Mana Required. Block enemy's attack for 1 turn.")
     print("\nItems:")
-    print("- Potion x\(user.pots). Heal 20 HP.")
-    print("- Elixir x\(user.elixirs). Heal 10 MP")
+    print("- Potion x\(pots). Heal 20 HP.")
+    print("- Elixir x\(elixirs). Heal 10 MP")
     while true{
         print("Press [return] to go back.")
         let input = String(readLine() ?? "")
@@ -116,7 +141,7 @@ func healWounds(){
     var input = "dylanganteng"
     var onrepeat = false
     repeat{
-        if(user.pots == 0){
+        if(pots == 0){
             while true{
                 print("\nYou don't have anymore potions left. Be careful from here on out.")
                 print("Press [return] to continue.")
@@ -129,8 +154,8 @@ func healWounds(){
                 break
             }
         }
-        print("\nYour HP is \(user.maxHealth)/\(user.mxHP).")
-        print("You have \(user.pots) potions left.")
+        print("\nYour HP is \(maxHealth)/\(mxHP).")
+        print("You have \(pots) potions left.")
         if(onrepeat){
             print("\nStill want to use 1 potion to heal again?  [Y/N]")
         }else{
@@ -140,7 +165,7 @@ func healWounds(){
         input = readLine()?.lowercased() ?? ""
         
         if(input == "y"){
-            user.usePotion()
+            usePotion()
             onrepeat = true
         }
     }while(input != "n")
@@ -150,7 +175,7 @@ func drinkElixir(){
     var input = "dylanganteng"
     var onrepeat = false
     repeat{
-        if(user.elixirs == 0){
+        if(elixirs == 0){
             while true{
                 print("\nYou don't have anymore elixirs left. Be careful from here on out.")
                 print("Press [return] to continue.")
@@ -163,8 +188,8 @@ func drinkElixir(){
                 break
             }
         }
-        print("\nYour MP is \(user.maxMana)/\(user.mxMP).")
-        print("You have \(user.elixirs) elixirs left.")
+        print("\nYour MP is \(maxMana)/\(mxMP).")
+        print("You have \(elixirs) elixirs left.")
         if(onrepeat){
             print("\nStill want to use 1 elixir to heal again?  [Y/N]")
         }else{
@@ -174,7 +199,7 @@ func drinkElixir(){
         input = readLine()?.lowercased() ?? ""
         
         if(input == "y"){
-            user.useElixir()
+            useElixir()
             onrepeat = true
         }
     }while(input != "n")
@@ -183,13 +208,14 @@ func drinkElixir(){
 func battle(){
     var scanned = false
     var charged = 1
-    if(enemy.name == "Troll"){
+    var leave = false
+    if(nameEnemy == "Troll"){
         print("\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.")
         print("Suddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.")
-    }else if(enemy.name == "Golem"){
+    }else if(nameEnemy == "Golem"){
         print("\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your skin.")
         print("Suddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive , snarling Golem emerges from the shadows.")
-    }else if(enemy.name == "The Pedophile"){
+    }else if(nameEnemy == "BIG BOSS"){
         print("Bob the neighbor is harrasing children! \nSave the children at all costs!!!")
     }
     while true{
@@ -197,68 +223,83 @@ func battle(){
         if(charged == 3){
             special = 3
         }
-        print("\n😈 Name  : \(enemy.name)")
-        if(scanned){
-            print("😈 Health: \(enemy.health)/\(enemy.maxHealth)")
-        }else{
-            print("😈 Health: ????")
-        }
-        print("==============\n")
-        print("💩 Name  : \(user.name)")
-        print("💩 Health: \(user.maxHealth)/\(user.mxHP)")
-        print("💩 Mana  : \(user.maxMana)/\(user.mxMP)")
-        print("\nChoose your action:")
-        if(user.hasGun){
-            print("[1] Shoot. No Mana Required. Deal light damage.")
-            print("[2] Headshot!. 10 Mana Required. Deal heavy damage.")
-        }else{
-            print("[1] Bludgeon. No Mana Required. Deal light damage.")
-            print("[2] Blind Tiger Strike. 10 Mana Required. Deal heavy damage.")
-        }
-        print("[3] Black Turtle Formation. 10 Mana Required. Block enemy's attack for 1 turn.")
-        print("\n[4] Use potion to heal")
-        print("[5] Scan enemy's vitals")
-        print("[6] Flee from battle")
-        print("\nYour choice?")
         
-        let input = readLine()?.lowercased()
-        
-        if(input == "1"){
-            let dmg = user.strength + 15
-            enemy.takeDamage(amount: dmg)
-            print("\nYour normal attack dealt \(dmg) damage!\n")
-        }else if(input == "2"){
-            if(user.maxMana < 10){
-                print("You do not have enough mana! \n")
+        while true{
+            print("\n😈 Name  : \(nameEnemy)")
+            if(scanned){
+                print("😈 Health: \(health)/\(maxHealthEnemy)")
             }else{
-                user.useMana(amount: 10)
-                let dmg = user.strength * 2 + 50
-                enemy.takeDamage(amount: dmg)
-                print("\nYour skill dealt \(dmg) damage!\n")
+                print("😈 Health: ????")
             }
-        }else if(input == "3"){
-            user.defend()
-        }else if(input == "4"){
-            healWounds()
-        }else if(input == "5"){
-            scanned = true
-        }else if(input == "6"){
-            print("You feel that if you don't escape soon enough, you won't be able to continue the fight.")
-            print("You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.")
-            print("\n You are safe for now.")
-            print("Press [return] to continue: ")
-
-            let input = String(readLine() ?? "")
-           
-            if(input == ""){
-                break
+            print("==============\n")
+            print("💩 Name  : \(nameP)")
+            print("💩 Health: \(maxHealth)/\(mxHP)")
+            print("💩 Mana  : \(maxMana)/\(mxMP)")
+            print("\nChoose your action:")
+            if(hasGun){
+                print("[1] Shoot. No Mana Required. Deal light damage.")
+                print("[2] Headshot!. 10 Mana Required. Deal heavy damage.")
+            }else{
+                print("[1] Bludgeon. No Mana Required. Deal light damage.")
+                print("[2] Blind Tiger Strike. 10 Mana Required. Deal heavy damage.")
             }
+            print("[3] Black Turtle Formation. 10 Mana Required. Block enemy's attack for 1 turn.")
+            print("\n[4] Use potion to heal")
+            print("[5] Scan enemy's vitals")
+            print("[6] Flee from battle")
+            print("\nYour choice?")
             
+            let input = readLine()?.lowercased()
+            
+            if(input == "1"){
+                let dmg = strength + 15
+                enemytakeDamage(amount: dmg)
+                print("\nYour normal attack dealt \(dmg) damage!\n")
+                break
+            }else if(input == "2"){
+                if(maxMana < 10){
+                    print("You do not have enough mana! \n")
+                }else{
+                    useMana(amount: 10)
+                    let dmg = strength * 2 + 50
+                    enemytakeDamage(amount: dmg)
+                    print("\nYour skill dealt \(dmg) damage!\n")
+                }
+                break
+            }else if(input == "3"){
+                userdefend()
+                break
+            }else if(input == "4"){
+                healWounds()
+                break
+            }else if(input == "5"){
+                scanned = true
+                break
+            }else if(input == "6"){
+                print("You feel that if you don't escape soon enough, you won't be able to continue the fight.")
+                print("You look around frantically, searching for a way out. You sprint towards the exit, your heart pounding in your chest.")
+                print("\n You are safe for now.")
+                print("Press [return] to continue: ")
+
+                let input = String(readLine() ?? "")
+               
+                if(input == ""){
+                    leave = true
+                }
+                break
+                
+            }else{
+                print("\nINPUT A PROPER INPUT!\n")
+            }
         }
         
-        if(enemy.health <= 0){
-            print("You have slain \(enemy.name)! You have leveled up! 🏆\n")
-            reward(name: enemy.name)
+        if(leave){
+            break
+        }
+        
+        if(health <= 0){
+            print("You have slain \(nameEnemy)! You have leveled up! 🏆\n")
+            reward(name: nameEnemy)
             while true{
                 print("Press [return] to continue.")
                 let input = String(readLine() ?? "")
@@ -270,12 +311,12 @@ func battle(){
         }
         
         if(special == 6){
-            if(enemy.name == "Troll"){
+            if(nameEnemy == "Troll"){
                 print("The Ogre is charging his attack!")
-            }else if(enemy.name == "Golem"){
+            }else if(nameEnemy == "Golem"){
                 print("The Golem is preparing for huge attack!")
-            }else if(enemy.name == "The Pedophile"){
-                print("The Pedophile is preparing a huge attack!")
+            }else if(nameEnemy == "BIG BOSS"){
+                print("The BOSS is preparing a huge attack!")
             }
             print("\nYou have to block this attack!!!\n")
             charged = 3
@@ -287,14 +328,14 @@ func battle(){
                 }
             }
         }else{
-            if(user.shield){
-                user.shield = false
-                if(enemy.name == "Troll"){
+            if(shield){
+                shield = false
+                if(nameEnemy == "Troll"){
                     print("The Ogre Slammed his club at you! \nYou blocked the Attack!")
-                }else if(enemy.name == "Golem"){
+                }else if(nameEnemy == "Golem"){
                     print("The Golem threw a rock at you! \nYou blocked the Attack!")
-                }else if(enemy.name == "The Pedophile"){
-                    print("The Pedophile threw a left hook! \nYou blocked the Attack!")
+                }else if(nameEnemy == "BIG BOSS"){
+                    print("The BOSS threw a left hook! \nYou blocked the Attack!")
                 }
                 
                 charged = 1
@@ -307,18 +348,18 @@ func battle(){
                     }
                 }
             }else{
-                let ouch = enemy.strength * charged
+                let ouch = strengthEnemy * charged
                 charged = 1
-                user.takeDamage(amount: ouch)
-                var dmg = ouch - user.defense
+                usertakeDamage(amount: ouch)
+                var dmg = ouch - defense
                 if(dmg < 0){
                     dmg = 0
                 }
-                if(enemy.name == "Troll"){
+                if(nameEnemy == "Troll"){
                     print("The Ogre Slammed his club at you! \nYou take \(dmg) Damage!")
-                }else if(enemy.name == "Golem"){
+                }else if(nameEnemy == "Golem"){
                     print("The Golem threw a rock at you! \nYou take \(dmg) Damage!")
-                }else if(enemy.name == "The Pedophile"){
+                }else if(nameEnemy == "BIG BOSS"){
                     print("The Pedophile threw a left hook! \nYou take \(dmg) Damage!")
                 }
                 
@@ -333,10 +374,10 @@ func battle(){
             
         }
         
-        if(user.maxHealth <= 0){
-            print("/n/n/n/n/n/nYou died :(")
-            print("That is the end of \(user.name)'s adventure.")
-            print("Adventurer Score : \(user.lvl * 1000 - 10000)")
+        if(maxHealth <= 0){
+            print("\n\n\n\n\nYou died :(")
+            print("That is the end of \(nameP)'s adventure.")
+            print("Adventurer Score : \(lvl * 1000 - 10000)")
             exit(0)
         }
         
@@ -345,15 +386,15 @@ func battle(){
 
 func reward(name: String){
     if(name == "Troll"){
-        user.lvlup()
+        userlvlup()
         let prob = Int.random(in: 1...10)
         if(prob >= 6){
             print("Nice! You found some Potions!")
             let p = Int.random(in: 2...3)
             print("Gained \(p) Potions!")
-            user.pots += p
+            pots += p
         }else if(prob <= 3){
-            if(user.hasGun == false){
+            if(hasGun == false){
                 print("You found a treasure chest nearby and find a gun!")
                 while true{
                     print("Will you equip the gun? [Y/N]\n")
@@ -361,8 +402,8 @@ func reward(name: String){
             
                     if(input == "y"){
                         print("You have equipped the gun!\n")
-                        user.strength += 25
-                        user.hasGun = true
+                        strength += 25
+                        hasGun = true
                         break
                     }
                     if(input == "n"){
@@ -376,26 +417,26 @@ func reward(name: String){
                 print("Jackpot! You found a lot of items!")
                 print("Gained \(p) Potions!")
                 print("Gained \(e) Elixirs!")
-                user.pots += p
-                user.elixirs += e
+                pots += p
+                elixirs += e
             }
         }else{
             print("Nice! You found some Elixirs!")
             let p = Int.random(in: 3...5)
             print("Gained \(p) Elixirs!")
-            user.elixirs += p
+            elixirs += p
         }
     }else if(name == "Golem"){
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
-        user.lvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
+        userlvlup()
     
         
         let prob = Int.random(in: 1...10)
@@ -403,9 +444,9 @@ func reward(name: String){
             print("Nice! You found some Potions!")
             let p = Int.random(in: 4...6)
             print("Gained \(p) Potions!")
-            user.pots += p
+            pots += p
         }else if(prob <= 3){
-            if(user.hasArmor == false){
+            if(hasArmor == false){
                 print("You found a treasure chest nearby and find Armor!")
                 while true{
                     print("Will you equip the Armor? [Y/N]\n")
@@ -413,8 +454,8 @@ func reward(name: String){
             
                     if(input == "y"){
                         print("You have equipped the gun!\n")
-                        user.defense += 20
-                        user.hasArmor = true
+                        defense += 20
+                        hasArmor = true
                         break
                     }
                     if(input == "n"){
@@ -428,114 +469,82 @@ func reward(name: String){
                 print("Jackpot! You found a lot of items!")
                 print("Gained \(p) Potions!")
                 print("Gained \(e) Elixirs!")
-                user.pots += p
-                user.elixirs += e
+                pots += p
+                elixirs += e
             }
         }else{
             print("Nice! You found some Elixirs!")
             let p = Int.random(in: 4...6)
             print("Gained \(p) Elixirs!")
-            user.elixirs += p
+            elixirs += p
         }
     }else{
         
         print("\n\n\n\nYou have saved humanity from Bob! The day is saved!")
-        print("This is the end of your adventure! \(user.name) is a hero for all!")
-        print("Adventurer Score : \(user.lvl * 1000 + 50000)\n\n\n\n\n\n\n")
+        print("This is the end of your adventure! \(name) is a hero for all!")
+        print("Adventurer Score : \(lvl * 1000 + 50000)\n\n\n\n\n\n\n")
         exit(0)
     }
-    
-    
 }
-class Player {
-    var mxHP = 100
-    var maxHealth = 100
-    var mxMP = 50
-    var maxMana = 50
-    var pots = 10
-    var elixirs = 10
-    var shield = false
-    var name = ""
-    var lvl = 1
-    var strength = 10
-    var hasGun = false
-    var defense = 0
-    var hasArmor = false
-        
-    func takeDamage(amount: Int) {
-        if(shield == true){
-            print("\nYou have defended yourself!\n")
-        }else{
-            let dmg = amount - defense
-            maxHealth -= dmg
-            if maxHealth < 0 {
-                maxHealth = 0
-            }
-        }
-        
-    }
-    
-    func lvlup(){
-        lvl += 1
-        strength += 2
-        mxHP += 2
-        mxMP += 1
-    }
-    
-    func useMana(amount: Int){
-        maxMana -= amount
-        
-    }
-    
-    func defend(){
-        shield = true
-    }
-        
-    func usePotion() {
-        if pots > 0 {
-            maxHealth += 20
-            if (maxHealth > mxHP){
-                maxHealth = mxHP
-            }
-            pots -= 1
-            print("Player used a potion. Health is now \(maxHealth). Potions left: \(pots).")
-        } else {
-            print("No potions left!")
-        }
-    }
-    
-    func useElixir() {
-        if elixirs > 0 {
-            maxMana += 10
-            if (maxMana > mxMP){
-                maxMana = mxMP
-            }
-            elixirs -= 1
-            print("Player used an elixir. Mana is now \(maxMana). Elixirs left: \(elixirs).")
-        } else {
-            print("No elixirs left!")
+
+func usertakeDamage(amount: Int){
+    if(shield == true){
+        print("\nYou have defended yourself!\n")
+    }else{
+        let dmg = amount - defense
+        maxHealth -= dmg
+        if maxHealth < 0 {
+            maxHealth = 0
         }
     }
 }
 
-class Enemy{
-    var health: Int
-    var maxHealth: Int
-    var strength: Int
-    var name: String
+func userlvlup(){
+    lvl += 1
+    strength += 2
+    mxHP += 2
+    mxMP += 1
+}
+
+func useMana(amount: Int){
+    maxMana -= amount
     
-    init(maxHealth: Int, strength: Int, name: String) {
-        self.maxHealth = maxHealth
-        self.strength = strength
-        self.name = name
-        health = maxHealth
-    }
-    
-    func takeDamage(amount: Int) {
-        health -= amount
-        if health < 0 {
-            health = 0
+}
+
+func userdefend(){
+    shield = true
+}
+
+func usePotion() {
+    if pots > 0 {
+        maxHealth += 20
+        if (maxHealth > mxHP){
+            maxHealth = mxHP
         }
+        pots -= 1
+        print("Player used a potion. Health is now \(maxHealth). Potions left: \(pots).")
+    } else {
+        print("No potions left!")
+    }
+}
+
+func useElixir() {
+    if elixirs > 0 {
+        maxMana += 10
+        if (maxMana > mxMP){
+            maxMana = mxMP
+        }
+        elixirs -= 1
+        print("Player used an elixir. Mana is now \(maxMana). Elixirs left: \(elixirs).")
+    } else {
+        print("No elixirs left!")
+    }
+}
+
+func enemytakeDamage(amount: Int) {
+    health -= amount
+    if health < 0 {
+        health = 0
     }
 }
 
