@@ -44,7 +44,6 @@ func startGame(){
             welcomeScreen()
         }
     }while(input != "")
-    
 }
 
 func welcomeScreen(){
@@ -60,12 +59,15 @@ func welcomeScreen(){
             nameP = gg
             journeyScreen()
             break // Exit the loop
+        }else{
+            print("\nINPUT A PROPER INPUT!\n")
         }
     }
 }
 
 func journeyScreen(){
     while true {
+        //main menu
         print("\nFrom here you can... \n")
         print("[C]heck your health and stats")
         print("[H]eal your wounds with potions")
@@ -86,23 +88,31 @@ func journeyScreen(){
         }else if(input == "d"){
             drinkElixir()
         }else if(input == "f"){
+            //setting the enemy stats
             health = 300
+            maxHealthEnemy = 300
             strengthEnemy = 10
             nameEnemy = "Troll"
             battle()
         }else if(input == "m"){
+            //setting the enemy stats
             health = 600
+            maxHealthEnemy = 600
             strengthEnemy = 20
             nameEnemy = "Golem"
             battle()
         }else if(input == "e"){
+            //setting the enemy stats
             health = 1000
+            maxHealthEnemy = 1000
             strengthEnemy = 40
             nameEnemy = "BIG BOSS"
             battle()
         }else if(input == "q"){
             print("\nThat will be the end of our adventure today! Fare thee well young martial artist!   \n\n")
             break
+        }else{
+            print("\nINPUT A PROPER INPUT!\n")
         }
     }
 }
@@ -116,6 +126,7 @@ func showStats(){
     print("Strength     : \(strength)")
     print("Defense      : \(defense)")
     print("\nMagic:")
+    //showing skills based on weapon
     if(hasGun){
         print("- Shoot. No Mana Required. Deal light damage.")
         print("- Headshot!. 10 Mana Required. Deal heavy damage.")
@@ -132,6 +143,8 @@ func showStats(){
         let input = String(readLine() ?? "")
         if(input == ""){
             break
+        }else{
+            print("\nINPUT A PROPER INPUT!\n")
         }
     }
     print("\n===========================================")
@@ -148,6 +161,8 @@ func healWounds(){
                 input = String(readLine() ?? "")
                 if(input == ""){
                     break
+                }else{
+                    print("\nINPUT A PROPER INPUT!\n")
                 }
             }
             if(input == ""){
@@ -167,6 +182,10 @@ func healWounds(){
         if(input == "y"){
             usePotion()
             onrepeat = true
+        }else if(input == "n"){
+            
+        }else{
+            print("\nINPUT A PROPER INPUT!\n")
         }
     }while(input != "n")
 }
@@ -182,6 +201,8 @@ func drinkElixir(){
                 input = String(readLine() ?? "")
                 if(input == ""){
                     break
+                }else{
+                    print("\nINPUT A PROPER INPUT!\n")
                 }
             }
             if(input == ""){
@@ -201,6 +222,10 @@ func drinkElixir(){
         if(input == "y"){
             useElixir()
             onrepeat = true
+        }else if(input == "n"){
+            
+        }else{
+            print("\nINPUT A PROPER INPUT!\n")
         }
     }while(input != "n")
 }
@@ -209,6 +234,8 @@ func battle(){
     var scanned = false
     var charged = 1
     var leave = false
+    
+    //small intro based on enemy name
     if(nameEnemy == "Troll"){
         print("\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.")
         print("Suddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.")
@@ -216,9 +243,13 @@ func battle(){
         print("\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your skin.")
         print("Suddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive , snarling Golem emerges from the shadows.")
     }else if(nameEnemy == "BIG BOSS"){
-        print("Bob the neighbor is harrasing children! \nSave the children at all costs!!!")
+        print("The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!")
     }
+    
+    
+    //looping main battle logic
     while true{
+        //deciding enemy attack pattern (normal attack or charge)
         var special = Int.random(in: 1...6)
         if(charged == 3){
             special = 3
@@ -293,12 +324,12 @@ func battle(){
             }
         }
         
-        if(leave){
-            break
-        }
+        
         
         if(health <= 0){
             print("You have slain \(nameEnemy)! You have leveled up! 🏆\n")
+            
+            //call function for battle rewards
             reward(name: nameEnemy)
             while true{
                 print("Press [return] to continue.")
@@ -309,37 +340,19 @@ func battle(){
             }
             break
         }
-        
-        if(special == 6){
-            if(nameEnemy == "Troll"){
-                print("The Ogre is charging his attack!")
-            }else if(nameEnemy == "Golem"){
-                print("The Golem is preparing for huge attack!")
-            }else if(nameEnemy == "BIG BOSS"){
-                print("The BOSS is preparing a huge attack!")
-            }
-            print("\nYou have to block this attack!!!\n")
-            charged = 3
-            while true{
-                print("Press [return] to continue.")
-                let input = String(readLine() ?? "")
-                if(input == ""){
-                    break
-                }
-            }
-        }else{
-            if(shield){
-                shield = false
+        if(leave == false){
+            
+            //charge attack for next turn
+            if(special == 6){
                 if(nameEnemy == "Troll"){
-                    print("The Ogre Slammed his club at you! \nYou blocked the Attack!")
+                    print("The Ogre is charging his attack!")
                 }else if(nameEnemy == "Golem"){
-                    print("The Golem threw a rock at you! \nYou blocked the Attack!")
+                    print("The Golem is preparing for huge attack!")
                 }else if(nameEnemy == "BIG BOSS"){
-                    print("The BOSS threw a left hook! \nYou blocked the Attack!")
+                    print("The BOSS is preparing a huge attack!")
                 }
-                
-                charged = 1
-                
+                print("\nYou have to block this attack!!!\n")
+                charged = 3
                 while true{
                     print("Press [return] to continue.")
                     let input = String(readLine() ?? "")
@@ -348,44 +361,74 @@ func battle(){
                     }
                 }
             }else{
-                let ouch = strengthEnemy * charged
-                charged = 1
-                usertakeDamage(amount: ouch)
-                var dmg = ouch - defense
-                if(dmg < 0){
-                    dmg = 0
-                }
-                if(nameEnemy == "Troll"){
-                    print("The Ogre Slammed his club at you! \nYou take \(dmg) Damage!")
-                }else if(nameEnemy == "Golem"){
-                    print("The Golem threw a rock at you! \nYou take \(dmg) Damage!")
-                }else if(nameEnemy == "BIG BOSS"){
-                    print("The Pedophile threw a left hook! \nYou take \(dmg) Damage!")
-                }
-                
-                while true{
-                    print("Press [return] to continue.")
-                    let input = String(readLine() ?? "")
-                    if(input == ""){
-                        break
+                //no damage if player had used guard the previous turn
+                if(shield){
+                    shield = false
+                    if(nameEnemy == "Troll"){
+                        print("The Ogre Slammed his club at you! \nYou blocked the Attack!")
+                    }else if(nameEnemy == "Golem"){
+                        print("The Golem threw a rock at you! \nYou blocked the Attack!")
+                    }else if(nameEnemy == "BIG BOSS"){
+                        print("The BOSS threw a left hook! \nYou blocked the Attack!")
+                    }
+                    
+                    charged = 1
+                    
+                    while true{
+                        print("Press [return] to continue.")
+                        let input = String(readLine() ?? "")
+                        if(input == ""){
+                            break
+                        }
+                    }
+                }else{
+                    //enemy attack, use multiplier if charged the previous turn
+                    let ouch = strengthEnemy * charged
+                    charged = 1
+                    usertakeDamage(amount: ouch)
+                    var dmg = ouch - defense
+                    if(dmg < 0){
+                        dmg = 0
+                    }
+                    if(nameEnemy == "Troll"){
+                        print("The Ogre Slammed his club at you! \nYou take \(dmg) Damage!")
+                    }else if(nameEnemy == "Golem"){
+                        print("The Golem threw a rock at you! \nYou take \(dmg) Damage!")
+                    }else if(nameEnemy == "BIG BOSS"){
+                        print("The BOSS threw a left hook! \nYou take \(dmg) Damage!")
+                    }
+                    
+                    while true{
+                        print("Press [return] to continue.")
+                        let input = String(readLine() ?? "")
+                        if(input == ""){
+                            break
+                        }
                     }
                 }
             }
-            
         }
         
+        //check for player death after enemy attack
         if(maxHealth <= 0){
             print("\n\n\n\n\nYou died :(")
             print("That is the end of \(nameP)'s adventure.")
             print("Adventurer Score : \(lvl * 1000 - 10000)")
             exit(0)
         }
+        //this leaves the battle loop and returns to the previous menu.
+        if(leave){
+            break
+        }
         
     }
+    
 }
 
+//rewards given based on chance and enemy name
 func reward(name: String){
     if(name == "Troll"){
+        //call function to increase user strength and deciding what reward to give the player
         userlvlup()
         let prob = Int.random(in: 1...10)
         if(prob >= 6){
@@ -394,6 +437,7 @@ func reward(name: String){
             print("Gained \(p) Potions!")
             pots += p
         }else if(prob <= 3){
+            //gives player items, if rediscovered then it gives the player item rewards.
             if(hasGun == false){
                 print("You found a treasure chest nearby and find a gun!")
                 while true{
@@ -405,10 +449,11 @@ func reward(name: String){
                         strength += 25
                         hasGun = true
                         break
-                    }
-                    if(input == "n"){
+                    }else if(input == "n"){
                         print("You decide a gun does not belong in this game :(\n")
                         break
+                    }else{
+                        print("\nINPUT A PROPER INPUT!\n")
                     }
                 }
             }else{
@@ -457,10 +502,11 @@ func reward(name: String){
                         defense += 20
                         hasArmor = true
                         break
-                    }
-                    if(input == "n"){
+                    }else if(input == "n"){
                         print("You decide you don't need Armor!\n")
                         break
+                    }else{
+                        print("\nINPUT A PROPER INPUT!\n")
                     }
                 }
             }else{
@@ -479,7 +525,7 @@ func reward(name: String){
             elixirs += p
         }
     }else{
-        
+        //reward for defeating boss is win, then exit system.
         print("\n\n\n\nYou have saved humanity from Bob! The day is saved!")
         print("This is the end of your adventure! \(name) is a hero for all!")
         print("Adventurer Score : \(lvl * 1000 + 50000)\n\n\n\n\n\n\n")
@@ -488,6 +534,7 @@ func reward(name: String){
 }
 
 func usertakeDamage(amount: Int){
+    //only run the function if player dont have shield
     if(shield == true){
         print("\nYou have defended yourself!\n")
     }else{
@@ -500,6 +547,7 @@ func usertakeDamage(amount: Int){
 }
 
 func userlvlup(){
+    //increase lvl increases other stats.
     lvl += 1
     strength += 2
     mxHP += 2
