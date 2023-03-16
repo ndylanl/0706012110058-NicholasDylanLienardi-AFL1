@@ -236,15 +236,8 @@ func battle(){
     var leave = false
     
     //small intro based on enemy name
-    if(nameEnemy == "Troll"){
-        print("\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.")
-        print("Suddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.")
-    }else if(nameEnemy == "Golem"){
-        print("\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your skin.")
-        print("Suddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive , snarling Golem emerges from the shadows.")
-    }else if(nameEnemy == "BIG BOSS"){
-        print("The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!")
-    }
+    
+    print(intros[nameEnemy])
     
     
     //looping main battle logic
@@ -595,5 +588,11 @@ func enemytakeDamage(amount: Int) {
         health = 0
     }
 }
+
+
+
+let intros = ["Troll": "\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.\nSuddenly you hear the sounds of                         twigs snapping behind you. You quickly spin around and find a Troll looming over you.",
+              "Golem": "\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your                  skin.\nSuddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive ,        snarling Golem emerges from the shadows.",
+              "BIG BOSS": "The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!"]
 
 
