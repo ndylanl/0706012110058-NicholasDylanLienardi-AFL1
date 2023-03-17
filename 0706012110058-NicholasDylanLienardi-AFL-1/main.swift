@@ -29,6 +29,11 @@ var maxHealthEnemy = 300
 var strengthEnemy = 10
 var nameEnemy = "test"
 
+//save intros
+let intros = ["Troll": "\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.\nSuddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.",
+              "Golem": "\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your  skin.\nSuddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive ,snarling Golem emerges from the shadows.",
+              "BIG BOSS": "The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!"]
+
 startGame()
 
 func startGame(){
@@ -237,7 +242,7 @@ func battle(){
     
     //small intro based on enemy name
     
-    print(intros[nameEnemy])
+    print(intros[nameEnemy]!)
     
     
     //looping main battle logic
@@ -422,7 +427,7 @@ func battle(){
 func reward(name: String){
     if(name == "Troll"){
         //call function to increase user strength and deciding what reward to give the player
-        userlvlup()
+        userlvlup(levels: 2)
         let prob = Int.random(in: 1...10)
         if(prob >= 6){
             print("Nice! You found some Potions!")
@@ -465,16 +470,8 @@ func reward(name: String){
             elixirs += p
         }
     }else if(name == "Golem"){
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
-        userlvlup()
+        userlvlup(levels:8)
+
     
         
         let prob = Int.random(in: 1...10)
@@ -539,12 +536,14 @@ func usertakeDamage(amount: Int){
     }
 }
 
-func userlvlup(){
+func userlvlup(levels: Int){
     //increase lvl increases other stats.
-    lvl += 1
-    strength += 2
-    mxHP += 2
-    mxMP += 1
+    for i in Range(1...levels) {
+        lvl += 1
+        strength += 2
+        mxHP += 2
+        mxMP += 1
+    }
 }
 
 func useMana(amount: Int){
@@ -591,8 +590,6 @@ func enemytakeDamage(amount: Int) {
 
 
 
-let intros = ["Troll": "\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.\nSuddenly you hear the sounds of                         twigs snapping behind you. You quickly spin around and find a Troll looming over you.",
-              "Golem": "\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your                  skin.\nSuddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive ,        snarling Golem emerges from the shadows.",
-              "BIG BOSS": "The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!"]
+
 
 
