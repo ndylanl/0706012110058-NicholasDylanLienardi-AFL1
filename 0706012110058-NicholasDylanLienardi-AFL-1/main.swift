@@ -11,12 +11,7 @@ import Foundation
 
 var hero = Player(Health: 100, maxHealth: 100, Attack: 10, Name: "")
 
-var enemy = Enemy(Health: 1000, maxHealth: 1000, Attack: 50, Name: "dylanganteng", goldDrop: 1000)
-
-//save intros
-let intros = ["Troll": "\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.\nSuddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.",
-              "Golem": "\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your  skin.\nSuddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive ,snarling Golem emerges from the shadows.",
-              "BIG BOSS": "The BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!"]
+var enemy = Enemy(Health: 1000, maxHealth: 1000, Attack: 50, Name: "dylanganteng", goldDrop: 1000, intro: "")
 
 startGame()
 
@@ -62,9 +57,9 @@ func journeyScreen(){
         print("[H]eal your wounds with potions")
         print("[D]rink elixirs to fill your mana \n")
         print("Choose where you want to go \n")
-        print("[F]orest of Trolls")
-        print("[M]ountain of Golems")
-        print("[E]vil Island")
+        print("[F]orest of Trolls (Recommended Lvl 1 Hunting Grounds)")
+        print("[M]ountain of Golems (Recommended Lvl 5 Hunting Grounds)")
+        print("[E]vil Island (Recommended Lvl 10 Hunting Grounds)")
         print("[Q]uit Game \n")
         print("Or spend your day shopping!")
         print("[S]hop")
@@ -73,22 +68,22 @@ func journeyScreen(){
         let input = readLine()?.lowercased()
         
         if(input == "c"){
-            showStats()
+            hero.showStats()
         }else if(input == "h"){
             hero.healWounds()
         }else if(input == "d"){
             hero.drinkElixir()
         }else if(input == "f"){
             //setting the enemy stats
-            enemy = Enemy(Health :300, maxHealth: 300, Attack: 10, Name: "Troll", goldDrop: 100)
+            enemy = Enemy(Health :300, maxHealth: 300, Attack: 10, Name: "Troll", goldDrop: 100, intro: "\nAs you arrive in the forest of trolls, you feel a sense of unease wash over you.\nSuddenly you hear the sounds of twigs snapping behind you. You quickly spin around and find a Troll looming over you.")
             battle()
         }else if(input == "m"){
             //setting the enemy stats
-            enemy = Enemy(Health :600, maxHealth: 600, Attack: 20, Name: "Golem", goldDrop: 200)
+            enemy = Enemy(Health :600, maxHealth: 600, Attack: 20, Name: "Golem", goldDrop: 200, intro: "\nAs you make your way through the rugged mountain terrain, you can feel the hill of the wind biting at your  skin.\nSuddenly, you hear you hear a sound that makes you freeze in your tracks. That's when you see it - a massive ,snarling Golem emerges from the shadows.")
             battle()
         }else if(input == "e"){
             //setting the enemy stats
-            enemy = Enemy(Health :1000, maxHealth: 1000, Attack: 40, Name: "BIG BOSS", goldDrop: 500)
+            enemy = Enemy(Health :1000, maxHealth: 1000, Attack: 40, Name: "BIG BOSS", goldDrop: 500, intro: "\nThe BOSS looms over you ready to end this all! \nDefeat him and end his reign!!!")
             battle()
         }else if(input == "q"){
             print("\nThat will be the end of our adventure today! Fare thee well young martial artist!   \n\n")
@@ -102,126 +97,8 @@ func journeyScreen(){
 }
 
 func shop(){
-    var exit = false
-    while true{
-        let a = Equipment(name: "Ancient Glove")
-        let b = Equipment(name: "Ancient Scarf")
-        let c = Equipment(name: "Ancient Boots")
-        let shopitems = [a, b, c]
-        print("\n===========================================")
-        print("Welcome to the shop! Here you can use your hard-earned gold and buy equipment and items for your long adventure!\n")
-        var counter = 0
-        for item in shopitems {
-            counter += 1
-            print("[\(counter)] \(item.name) [\(item.atkBonus) AtkBonus] [\(item.defBonus) DefBonus] [\(item.price) Gold]")
-        }
-        print("[E]xit")
-        print("\nYour Money: \(hero.gold)")
-        print("What will your purchase be: ")
-        let input = readLine()?.lowercased()
-        switch(input){
-        case "1":
-            if(hero.gold >= a.price){
-                while true{
-                    print("Confirm purchase of \(a.name) for \(a.price)? [Y/N]")
-                    let confirm = readLine()?.lowercased()
-                    if(confirm == "y"){
-                        hero.Equip(equip: a)
-                        break
-                    }else if(confirm == "n"){
-                        print("Purchase cancelled.")
-                        break
-                    }else{
-                        print("INVALID INPUT!!!")
-                    }
-                }
-            }else{
-                print("Young Adventurer! You don't have enough Gold for this purchase!!\n")
-            }
-            break
-        case "2":
-            if(hero.gold >= b.price){
-                while true{
-                    print("Confirm purchase of \(b.name) for \(b.price)? [Y/N]")
-                    let confirm = readLine()?.lowercased()
-                    if(confirm == "y"){
-                        hero.Equip(equip: b)
-                        break
-                    }else if(confirm == "n"){
-                        print("Purchase cancelled.")
-                        break
-                    }else{
-                        print("INVALID INPUT!!!")
-                    }
-                }
-            }else{
-                print("Young Adventurer! You don't have enough Gold for this purchase!!\n")
-            }
-            break
-        case "3":
-            if(hero.gold >= c.price){
-                while true{
-                    print("Confirm purchase of \(c.name) for \(c.price)? [Y/N]")
-                    let confirm = readLine()?.lowercased()
-                    if(confirm == "y"){
-                        hero.Equip(equip: c)
-                        break
-                    }else if(confirm == "n"){
-                        print("Purchase cancelled.")
-                        break
-                    }else{
-                        print("INVALID INPUT!!!")
-                    }
-                }
-            }else{
-                print("Young Adventurer! You don't have enough Gold for this purchase!!\n")
-            }
-            break
-        case "e":
-            print("Thanks for shopping! Come again soon!\n")
-            exit = true
-            break
-        default:
-            print("Invalid Input!")
-        }
-        if(exit){
-            break
-        }
-    }
-}
-
-func showStats(){
-    print("\n===========================================")
-    print("Player Name  : \(hero.Name)")
-    print("Player Level : \(hero.lvl)")
-    print("\nPlayer Health: \(hero.Health)/\(hero.maxHealth)")
-    print("Player Mana  : \(hero.maxMana)/\(hero.mxMP)")
-    print("Strength     : \(hero.Attack)")
-    print("Defense      : \(hero.Defense)")
-    print("Gold         : \(hero.gold)")
-    print("\nMagic:")
-    //showing skills based on weapon
-    if(hero.hasGun){
-        print("- Shoot. No Mana Required. Deal light damage.")
-        print("- Headshot!. 10 Mana Required. Deal heavy damage.")
-    }else{
-        print("- Bludgeon. No Mana Required. Deal light damage.")
-        print("- Blind Tiger Strike. 10 Mana Required. Deal heavy damage.")
-    }
-    print("- Black Turtle Formation. 10 Mana Required. Block enemy's attack for 1 turn.")
-    print("\nItems:")
-    print("- Potion x\(hero.pots). Heal 20 HP.")
-    print("- Elixir x\(hero.elixirs). Heal 10 MP")
-    while true{
-        print("Press [return] to go back.")
-        let input = String(readLine() ?? "")
-        if(input == ""){
-            break
-        }else{
-            print("\nINPUT A PROPER INPUT!\n")
-        }
-    }
-    print("\n===========================================")
+    let newShop = Shop(stars:Int.random(in: 1...5))
+    newShop.visit(visitor: hero)
 }
 
 func battle(){
@@ -230,7 +107,7 @@ func battle(){
     
     //small intro based on enemy name
     
-    print(intros[enemy.Name]!)
+    print(enemy.intro)
     
     //looping main battle logic
     while true{
@@ -246,7 +123,7 @@ func battle(){
                 print("😈 Health: ????")
             }
             print("==============\n")
-            print("💩 Name  : \(hero.Name)")
+            print("💩 Name  : Lvl.\(hero.lvl) \(hero.Name)")
             print("💩 Health: \(hero.Health)/\(hero.maxHealth)")
             print("💩 Mana  : \(hero.maxMana)/\(hero.mxMP)")
             print("\nChoose your action:")
@@ -281,7 +158,12 @@ func battle(){
                 }
                 break
             }else if(input == "3"){
-                hero.userdefend()
+                if(hero.maxMana < 10){
+                    print("You do not have enough mana! \n")
+                }else{
+                    hero.useMana(amount: 10)
+                    hero.userDefend()
+                }
                 break
             }else if(input == "4"){
                 hero.healWounds()
@@ -326,7 +208,7 @@ func battle(){
         }
         
         //check for player death after enemy attack
-        if(hero.maxHealth <= 0){
+        if(hero.Health <= 0){
             print("\n\n\n\n\nYou died :(")
             print("That is the end of \(hero.Name)'s adventure.")
             print("Adventurer Score : \(hero.lvl * 1000 - 10000 + hero.gold * 10)")

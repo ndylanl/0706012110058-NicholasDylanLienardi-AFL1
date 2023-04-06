@@ -8,7 +8,7 @@
 import Foundation
 //stats player
 
-class Player: Entity{
+class Player: Entity, HeroAction{
     var mxMP = 50
     var maxMana = 50
     var pots = 10
@@ -18,7 +18,7 @@ class Player: Entity{
     var hasGun = false
     var hasArmor = false
     var equips: Array<Equipment> = []
-    var gold: Int = 100
+    var gold: Int = 100    
     
     override func takeDamage(amount: Int){
         //only run the function if player dont have shield
@@ -26,7 +26,9 @@ class Player: Entity{
             print("\nYou have defended yourself!\n")
         }else{
             let dmg = amount - Defense
-            Health -= dmg
+            if(dmg > 0){
+                Health -= dmg
+            }
             if Health < 0 {
                 Health = 0
             }
@@ -47,8 +49,9 @@ class Player: Entity{
         maxMana -= amount
     }
 
-    func userdefend(){
+    func userDefend(){
         shield = true
+        
     }
     
     func usePotion() {
@@ -78,36 +81,49 @@ class Player: Entity{
     }
     
     func Equip(equip: Equipment){
-        for item in equips{
-            if(item.name == equip.name){
-                while true{
-                    print("\n=============")
-                    print("  !WARNING!  ")
-                    print("=============")
-                    print("You already own a version of this item!")
-                    print("Old \(item.name) AtkBonus = \(item.atkBonus) DefBonus = \(item.defBonus)")
-                    print("New \(equip.name) AtkBonus = \(equip.atkBonus) DefBonus = \(equip.defBonus)")
-                    print("Confirm replacing the \(item.name)? [Y/N]")
-                    let confirm = readLine()?.lowercased()
-                    if(confirm == "y"){
-                        Attack -= item.atkBonus
-                        Defense -= item.defBonus
-                        Attack += equip.atkBonus
-                        Defense += equip.defBonus
-                        gold -= equip.price
-                        print("Purchase completed.")
-                    }else if(confirm == "n"){
-                        print("Purchase cancelled.")
-                        break
-                    }else{
-                        print("INVALID INPUT!!!")
+        if(equips.isEmpty){
+            Attack += equip.atkBonus
+            Defense += equip.defBonus
+            gold -= equip.price
+            equips.append(equip)
+            print("Purchase completed.")
+        }else{
+            var newItem = true
+            for item in equips{
+                if(item.name == equip.name){
+                    newItem = false
+                    while true{
+                        print("\n=============")
+                        print("  !WARNING!  ")
+                        print("=============")
+                        print("You already own a version of this item!")
+                        print("Old \(item.name) AtkBonus = \(item.atkBonus)⚔️ DefBonus = \(item.defBonus)🛡️")
+                        print("New \(equip.name) AtkBonus = \(equip.atkBonus)⚔️ DefBonus = \(equip.defBonus)🛡️")
+                        print("Confirm replacing the \(item.name)? [Y/N]")
+                        let confirm = readLine()?.lowercased()
+                        if(confirm == "y"){
+                            Attack -= item.atkBonus
+                            Defense -= item.defBonus
+                            Attack += equip.atkBonus
+                            Defense += equip.defBonus
+                            gold -= equip.price
+                            print("Purchase completed.")
+                            break
+                        }else if(confirm == "n"){
+                            print("Purchase cancelled.")
+                            break
+                        }else{
+                            print("INVALID INPUT!!!")
+                        }
                     }
                 }
-            }else{
-                Attack += equip.atkBonus
-                Defense += equip.defBonus
-                gold -= equip.price
-                print("Purchase completed.")
+                if(newItem){
+                    Attack += equip.atkBonus
+                    Defense += equip.defBonus
+                    gold -= equip.price
+                    equips.append(equip)
+                    print("Purchase completed.")
+                }
             }
         }
     }
@@ -191,4 +207,39 @@ class Player: Entity{
             }
         }while(input != "n")
     }
+    
+    func showStats(){
+        print("\n===========================================")
+        print("Player Name  : \(Name)")
+        print("Player Level : \(lvl)")
+        print("\nPlayer Health: \(Health)/\(maxHealth)")
+        print("Player Mana  : \(maxMana)/\(mxMP)")
+        print("Strength     : \(Attack)")
+        print("Defense      : \(Defense)")
+        print("Gold         : \(gold)")
+        print("\nMagic:")
+        //showing skills based on weapon
+        if(hasGun){
+            print("- Shoot. No Mana Required. Deal light damage.")
+            print("- Headshot!. 10 Mana Required. Deal heavy damage.")
+        }else{
+            print("- Bludgeon. No Mana Required. Deal light damage.")
+            print("- Blind Tiger Strike. 10 Mana Required. Deal heavy damage.")
+        }
+        print("- Black Turtle Formation. 10 Mana Required. Block enemy's attack for 1 turn.")
+        print("\nItems:")
+        print("- Potion x\(pots). Heal 20 HP.")
+        print("- Elixir x\(elixirs). Heal 10 MP")
+        while true{
+            print("Press [return] to go back.")
+            let input = String(readLine() ?? "")
+            if(input == ""){
+                break
+            }else{
+                print("\nINPUT A PROPER INPUT!\n")
+            }
+        }
+        print("\n===========================================")
+    }
+    
 }

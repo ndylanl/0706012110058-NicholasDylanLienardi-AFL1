@@ -12,6 +12,8 @@
 		0416AC8329D27BAD00887F1A /* Enemy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416AC8229D27BAD00887F1A /* Enemy.swift */; };
 		0416AC8529D27BBC00887F1A /* Equipment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416AC8429D27BBC00887F1A /* Equipment.swift */; };
 		0416AC8729D6747700887F1A /* Entity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416AC8629D6747700887F1A /* Entity.swift */; };
+		0416AC8D29DBBD8A00887F1A /* HeroFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416AC8C29DBBD8A00887F1A /* HeroFunctions.swift */; };
+		0416AC8F29DBBED800887F1A /* Shop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0416AC8E29DBBED800887F1A /* Shop.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +35,8 @@
 		0416AC8229D27BAD00887F1A /* Enemy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemy.swift; sourceTree = "<group>"; };
 		0416AC8429D27BBC00887F1A /* Equipment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Equipment.swift; sourceTree = "<group>"; };
 		0416AC8629D6747700887F1A /* Entity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entity.swift; sourceTree = "<group>"; };
+		0416AC8C29DBBD8A00887F1A /* HeroFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeroFunctions.swift; sourceTree = "<group>"; };
+		0416AC8E29DBBED800887F1A /* Shop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shop.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +74,8 @@
 				0416AC8229D27BAD00887F1A /* Enemy.swift */,
 				0416AC8429D27BBC00887F1A /* Equipment.swift */,
 				0416AC8629D6747700887F1A /* Entity.swift */,
+				0416AC8C29DBBD8A00887F1A /* HeroFunctions.swift */,
+				0416AC8E29DBBED800887F1A /* Shop.swift */,
 			);
 			path = "0706012110058-NicholasDylanLienardi-AFL-1";
 			sourceTree = "<group>";
@@ -136,7 +142,9 @@
 				0416AC8729D6747700887F1A /* Entity.swift in Sources */,
 				0416AC8129D27BA100887F1A /* Hero.swift in Sources */,
 				0416AC8529D27BBC00887F1A /* Equipment.swift in Sources */,
+				0416AC8F29DBBED800887F1A /* Shop.swift in Sources */,
 				0416AC8329D27BAD00887F1A /* Enemy.swift in Sources */,
+				0416AC8D29DBBD8A00887F1A /* HeroFunctions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

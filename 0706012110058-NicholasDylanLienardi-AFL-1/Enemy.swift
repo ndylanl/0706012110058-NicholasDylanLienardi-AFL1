@@ -11,9 +11,10 @@ import Foundation
 class Enemy : Entity{
     var goldDrop: Int = 0
     var charged: Int = 1
-    
+    var intro: String
 
-    init(Health: Int, maxHealth: Int, Attack: Int, Name: String, goldDrop: Int) {
+    init(Health: Int, maxHealth: Int, Attack: Int, Name: String, goldDrop: Int, intro: String) {
+        self.intro = intro
         super .init(Health: Health, maxHealth: maxHealth, Attack: Attack, Name: Name)
         self.goldDrop = goldDrop
     }
@@ -96,6 +97,7 @@ class Enemy : Entity{
         if(name == "Troll"){
             //call function to increase user strength and deciding what reward to give the player
             hero.lvlUp(levels: 2)
+            print("You have gained 2 levels!")
             let prob = Int.random(in: 1...10)
             if(prob >= 6){
                 print("Nice! You found some Potions!")
@@ -111,7 +113,9 @@ class Enemy : Entity{
                         let input = readLine()?.lowercased() ?? ""
                 
                         if(input == "y"){
-                            print("You have equipped the gun!\n")
+                            print("You have equipped the gun!")
+                            print("Your damage has gone up by 25 points!")
+                            print("You have gained new skills to compliment your new weapon!\n")
                             hero.Attack += 25
                             hero.hasGun = true
                             break
@@ -139,6 +143,7 @@ class Enemy : Entity{
             }
         }else if(name == "Golem"){
             hero.lvlUp(levels:8)
+            print("You have gained 8 levels!")
             let prob = Int.random(in: 1...10)
             if(prob >= 6){
                 print("Nice! You found some Potions!")
@@ -152,7 +157,8 @@ class Enemy : Entity{
                         print("Will you equip the Armor? [Y/N]\n")
                         let input = readLine()?.lowercased() ?? ""
                         if(input == "y"){
-                            print("You have equipped the gun!\n")
+                            print("You have equipped the Armor!")
+                            print("Your armor increases your defense by 20 points!\n")
                             hero.Defense += 20
                             hero.hasArmor = true
                             break
@@ -180,9 +186,10 @@ class Enemy : Entity{
             }
         }else{
             //reward for defeating boss is win, then exit system.
-            print("\n\n\n\nYou have saved humanity from Bob! The day is saved!")
-            print("This is the end of your adventure! \(name) is a hero for all!")
-            print("Adventurer Score : \(hero.lvl * 1000 + 50000 + hero.gold * 10)\n\n\n\n")
+            print("\n\n\n\nYou have saved humanity from the \(name)! The day is saved!")
+            print("This is the end of your adventure!")
+            hero.showStats()
+            print("\n\n\nAdventurer Score : \(hero.lvl * 1000 + 50000 + hero.gold * 10)\n\n\n\n")
             exit(0)
         }
     }

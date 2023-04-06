@@ -15,7 +15,9 @@ class Entity{
     var Name: String = ""
     
     func takeDamage(amount: Int) {
-        Health -= amount
+        if(amount > 0){
+            Health -= amount
+        }
         if Health < 0 {
             Health = 0
         }
